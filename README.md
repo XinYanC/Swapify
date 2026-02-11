@@ -5,6 +5,33 @@
 Frontend Vite: [swapify](swapify).
 Backend Python: [AXiS](https://github.com/XinYanC/AXiS)
 
+## Project Structure
+
+The repository has two parts: the frontend app in [swapify](swapify) and the backend in the [AXiS repo](https://github.com/XinYanC/AXiS).
+
+Here is how [Swapify](swapify) is structured:
+
+- [swapify/src/app](swapify/src/app): App shell and root layout (e.g., `App.jsx`).
+- [swapify/src/pages](swapify/src/pages): Page-level components routed by URL (e.g., Home, Login, Item Details).
+- [swapify/src/components](swapify/src/components): Shared UI components used across pages.
+- [swapify/src/api](swapify/src/api): API client helpers and endpoint wrappers.
+- [swapify/src/api/tests](swapify/src/api/__tests__): Placeholder tests for API wrappers.
+- [swapify/src/styles](swapify/src/styles): Global styles.
+- [swapify/public](swapify/public): Static assets served by Vite.
+
+```
+swapify/
+|_ public/
+|_ src/
+  |_ app/
+  |_ pages/
+  |_ components/
+  |_ api/
+    |_ __tests__/
+  |_ styles/
+  |_ assets/
+```
+
 ## User Requirements for Swapify
 
 ### General
