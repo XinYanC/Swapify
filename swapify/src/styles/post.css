@@ -1,0 +1,43 @@
+.post-container {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    margin: 10px 0;
+}
+
+.post-title {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.post-content {
+    font-size: 1em;
+    color: #666;
+    line-height: 1.5;
+}
+
+.post-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+    font-size: 0.9em;
+    color: #999;
+    width: 100%; /* Make footer full width */
+}
+
+@media (max-width: 600px) {
+    .post-container {
+        width: 100%; /* Full width on small screens */
+    }
+}
+
+@media (min-width: 601px) {
+    .post-container {
+        width: 80%; /* 80% width on larger screens */
+    }
+}

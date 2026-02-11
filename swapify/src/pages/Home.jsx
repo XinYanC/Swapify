@@ -3,6 +3,7 @@ import { getCitiesCount } from '../api/cities'
 import { getCountriesCount } from '../api/countries'
 import { getStatesCount } from '../api/states'
 import { getEndpoints, getHello } from '../api/system'
+import Post from '../components/post'
 
 function Home() {
   const [citiesCount, setCitiesCount] = useState(null)
@@ -121,6 +122,12 @@ function Home() {
       <button type="button" onClick={handleLoadEndpoints} disabled={isLoading}>
         {isLoading ? 'Loading…' : 'Load endpoints'}
       </button>
+
+    <div>
+      <Post></Post>
+      <Post></Post>
+      <Post></Post>
+    </div>
 
       {error && <p>{error}</p>}
       {citiesCount !== null && !error && <p>Total cities: {citiesCount}</p>}
