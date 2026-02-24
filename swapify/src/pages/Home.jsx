@@ -3,7 +3,7 @@ import { getCitiesCount } from '../api/cities'
 import { getCountriesCount } from '../api/countries'
 import { getStatesCount } from '../api/states'
 import { getEndpoints, getHello } from '../api/system'
-import Post from '../components/post'
+import Post from '../components/Post'
 
 function Home() {
   const [citiesCount, setCitiesCount] = useState(null)
