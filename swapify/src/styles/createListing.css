@@ -1,0 +1,161 @@
+.create-listing-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.create-listing-card {
+    background-color: white;
+    border-radius: 12px;
+    padding: 24px;
+    width: 500px;
+    max-width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.create-listing-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.create-listing-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #666;
+    line-height: 1;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-button:hover {
+    color: #000;
+}
+
+.create-listing-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.create-listing-form input,
+.create-listing-form textarea,
+.create-listing-form select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+.create-listing-form textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.create-listing-form select {
+    cursor: pointer;
+}
+
+.submit-button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    background-color: #000;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 8px;
+}
+
+.submit-button:hover {
+    background-color: #333;
+}
+
+.submit-button:disabled {
+    background-color: #666;
+    cursor: not-allowed;
+}
+
+.error-container {
+    margin-top: 16px;
+    text-align: center;
+}
+
+.error-header {
+    color: #d32f2f;
+    font-weight: bold;
+    font-size: 1rem;
+    margin: 0 0 5px 0;
+}
+
+.error-message {
+    color: #d32f2f;
+    font-weight: bold;
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.success-message {
+    color: #2e7d32;
+    margin-top: 16px;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.floating-add-button {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background-color: #000;
+    color: white;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1500;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.floating-add-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    background-color: #333;
+}
+
+.floating-add-button:active {
+    transform: scale(0.95);
+}

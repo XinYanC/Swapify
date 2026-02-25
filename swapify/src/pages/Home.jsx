@@ -1,104 +1,40 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { getCitiesCount } from '../api/cities'
-import { getCountriesCount } from '../api/countries'
-import { getStatesCount } from '../api/states'
-import { getEndpoints, getHello } from '../api/system'
+import { readListings } from '../api/listings'
 import Post from '../components/Post'
+import CreateListing from '../components/CreateListing'
 import FullLogo from '../assets/FullLogo.PNG'
+import '../styles/createListing.css'
 
 function Home() {
-  const [citiesCount, setCitiesCount] = useState(null)
-  const [countriesCount, setCountriesCount] = useState(null)
-  const [statesCount, setStatesCount] = useState(null)
-  const [helloStatus, setHelloStatus] = useState(null)
-  const [endpointsList, setEndpointsList] = useState(null)
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState('')
+  const [isCreateListingOpen, setIsCreateListingOpen] = useState(false)
+  const [listings, setListings] = useState([])
+  const [searchQuery, setSearchQuery] = useState('')
 
-  const handleLoadCount = async () => {
-    setIsLoading(true)
-    setError('')
-
+  const fetchListings = async () => {
     try {
-      const data = await getCitiesCount()
-      const count =
-        typeof data === 'number'
-          ? data
-          : data?.count ?? data?.total ?? JSON.stringify(data)
-      setCitiesCount(count)
+      const data = await readListings()
+      console.log('Listings data received:', data)
+      
+      // Handle the response structure: { "Listings": { id: {...}, ... }, "Number of Records": X }
+      let listingsArray = []
+      if (data && data.Listings) {
+        // Convert the Listings object to an array
+        listingsArray = Object.values(data.Listings)
+      } else if (Array.isArray(data)) {
+        listingsArray = data
+      }
+      
+      console.log('Listings array:', listingsArray)
+      setListings(listingsArray)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load count')
-    } finally {
-      setIsLoading(false)
+      console.error('Failed to load listings:', err)
     }
   }
 
-  const handleLoadCountriesCount = async () => {
-    setIsLoading(true)
-    setError('')
-
-    try {
-      const data = await getCountriesCount()
-      const count =
-        typeof data === 'number'
-          ? data
-          : data?.count ?? data?.total ?? JSON.stringify(data)
-      setCountriesCount(count)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load count')
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const handleLoadStatesCount = async () => {
-    setIsLoading(true)
-    setError('')
-
-    try {
-      const data = await getStatesCount()
-      const count =
-        typeof data === 'number'
-          ? data
-          : data?.count ?? data?.total ?? JSON.stringify(data)
-      setStatesCount(count)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load count')
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const handleLoadHello = async () => {
-    setIsLoading(true)
-    setError('')
-
-    try {
-      const data = await getHello()
-      setHelloStatus(
-        typeof data === 'string' ? data : data?.message ?? JSON.stringify(data)
-      )
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load status')
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const handleLoadEndpoints = async () => {
-    setIsLoading(true)
-    setError('')
-
-    try {
-      const data = await getEndpoints()
-      setEndpointsList(data)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load endpoints')
-    } finally {
-      setIsLoading(false)
-    }
-  }
+  useEffect(() => {
+    fetchListings()
+  }, [])
 
   return (
     <main>
@@ -109,8 +45,7 @@ function Home() {
           </Link>
         </div>
         <div className="main-nav-right">
-          <h2>Sell Items</h2>
-          <h2>Saved</h2>
+          <h2>Saved Items</h2>
           <h2>Messages</h2>
           <h2>
             <Link to="/login">Profile</Link>
@@ -118,49 +53,48 @@ function Home() {
         </div>
       </nav>
 
-      <p style={{ marginTop: '100px' }}>Find items students are selling or donating.</p>
-
-      <button type="button" onClick={handleLoadCount} disabled={isLoading}>
-        {isLoading ? 'Loading…' : 'Load city count'}
-      </button>
-
-      <button type="button" onClick={handleLoadCountriesCount} disabled={isLoading}>
-        {isLoading ? 'Loading…' : 'Load country count'}
-      </button>
-
-      <button type="button" onClick={handleLoadStatesCount} disabled={isLoading}>
-        {isLoading ? 'Loading…' : 'Load state count'}
-      </button>
-
-      <button type="button" onClick={handleLoadHello} disabled={isLoading}>
-        {isLoading ? 'Loading…' : 'Check server status'}
-      </button>
-
-      <button type="button" onClick={handleLoadEndpoints} disabled={isLoading}>
-        {isLoading ? 'Loading…' : 'Load endpoints'}
-      </button>
-
-      <div className="posts-grid">
-        <Post></Post>
-        <Post></Post>
-        <Post></Post>
-        <Post></Post>
-        <Post></Post>
-        <Post></Post>
-        <Post></Post>
-        <Post></Post>
+      <div className="search-container">
+        <input
+          type="text"
+          className="search-bar"
+          placeholder="Search listings..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
       </div>
 
-      {error && <p>{error}</p>}
-      {citiesCount !== null && !error && <p>Total cities: {citiesCount}</p>}
-      {countriesCount !== null && !error && (
-        <p>Total countries: {countriesCount}</p>
-      )}
-      {statesCount !== null && !error && <p>Total states: {statesCount}</p>}
-      {helloStatus && !error && <p>Server status: {helloStatus}</p>}
-      {endpointsList && !error && (
-        <pre>{JSON.stringify(endpointsList, null, 2)}</pre>
-      )}
+      <div className="posts-grid">
+        {listings.length > 0 ? (
+          listings.map((listing) => (
+            <Post
+              key={listing._id}
+              id={listing._id}
+              title={listing.title}
+              description={listing.description}
+              imageUrl={listing.images && listing.images.length > 0 ? listing.images[0] : null}
+              location={listing.meetup_location}
+              transactionType={listing.transaction_type}
+              price={listing.price}
+            />
+          ))
+        ) : (
+          <p>No listings available yet. Create one to get started!</p>
+        )}
+      </div>
+
+      <button
+        className="floating-add-button"
+        onClick={() => setIsCreateListingOpen(true)}
+        aria-label="Create new listing"
+      >
+        +
+      </button>
+
+      <CreateListing
+        isOpen={isCreateListingOpen}
+        onClose={() => setIsCreateListingOpen(false)}
+        onSuccess={fetchListings}
+      />
     </main>
   )
 }

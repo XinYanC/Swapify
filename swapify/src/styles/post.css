@@ -9,10 +9,36 @@
 }
 
 .post-title {
-    font-size: 1.5em;
+    font-size: 1.1em;
     font-weight: bold;
     color: #333;
+    margin-bottom: 4px;
+}
+
+.post-container img {
+    width: 100%;
+    border-radius: 6px;
     margin-bottom: 10px;
+    object-fit: cover;
+    max-height: 200px;
+}
+
+.post-description {
+    font-size: 0.95em;
+    color: #666;
+    line-height: 1.4;
+    margin: 8px 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.post-location {
+    font-size: 0.9em;
+    color: #888;
+    margin: 4px 0 8px 0;
 }
 
 .like-button,
@@ -38,6 +64,21 @@
 .transaction-button.buy {
     background-color: #f7c4d9;
     color: #7a1c3f;
+}
+
+.transaction-button.sell {
+    background-color: #ffd966;
+    color: #6b4b00;
+}
+
+.transaction-button.donation {
+    background-color: #c5e1f5;
+    color: #1565c0;
+}
+
+.transaction-button.drop-off {
+    background-color: #e1bee7;
+    color: #6a1b9a;
 }
 
 .post-content {
