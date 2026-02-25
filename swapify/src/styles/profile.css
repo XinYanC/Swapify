@@ -1,0 +1,360 @@
+/* Profile Page Styles */
+.profile-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    padding-top: 100px; /* Account for fixed navbar */
+}
+
+/* Loading State */
+.profile-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #f0f0f0;
+    border-top-color: #888888;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Error State */
+.profile-error {
+    text-align: center;
+    padding: 60px 20px;
+    padding-top: 120px;
+}
+
+.profile-error h2 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.profile-error p {
+    color: #888;
+    font-size: 1rem;
+}
+
+/* Profile Header */
+.profile-header {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #f0f0f0;
+    overflow: hidden;
+    margin-bottom: 24px;
+}
+
+.profile-cover {
+    height: 120px;
+    background: linear-gradient(45deg, #f8f8f8, #eaeaea);
+    position: relative;
+}
+
+.profile-info {
+    padding: 0 24px 24px 24px;
+    position: relative;
+}
+
+.profile-avatar-large {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: #f5f5f5;
+    border: 4px solid white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    font-weight: 400;
+    color: #666;
+    margin-top: -50px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.profile-details {
+    flex: 1;
+}
+
+.profile-name-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+}
+
+.profile-name {
+    font-size: 1.8rem;
+    font-weight: 500;
+    color: #1a1a1a;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.profile-name svg {
+    color: #4CAF50;
+    stroke: currentColor;
+}
+
+.profile-username {
+    font-size: 1rem;
+    color: #888;
+    margin: 0;
+}
+
+.profile-bio {
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.5;
+    margin: 16px 0;
+    max-width: 600px;
+}
+
+.profile-meta {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.profile-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #666;
+    font-size: 0.95rem;
+}
+
+.profile-meta-item svg {
+    stroke: currentColor;
+    width: 16px;
+    height: 16px;
+}
+
+/* Rating */
+.profile-rating {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.rating-stars {
+    color: #f8b84a;
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+}
+
+.rating-number {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #333;
+}
+
+.rating-total {
+    font-size: 0.9rem;
+    color: #888;
+}
+
+/* Stats */
+.profile-stats {
+    display: flex;
+    gap: 32px;
+    padding: 20px 0;
+    border-top: 1px solid #f0f0f0;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #1a1a1a;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #888;
+    margin-top: 4px;
+}
+
+/* Tabs */
+.profile-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 8px;
+}
+
+.tab-button {
+    padding: 8px 16px;
+    background: none;
+    border: none;
+    font-size: 1rem;
+    color: #888;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    font-weight: 500;
+}
+
+.tab-button:hover {
+    color: #333;
+}
+
+.tab-button.active {
+    color: #1a1a1a;
+}
+
+.tab-button.active::after {
+    content: '';
+    position: absolute;
+    bottom: -9px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #1a1a1a;
+}
+
+/* Posts Grid */
+.profile-posts-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+}
+
+@media (max-width: 1200px) {
+    .profile-posts-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 900px) {
+    .profile-posts-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 600px) {
+    .profile-posts-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Post Wrapper with Sold Overlay */
+.post-wrapper {
+    position: relative;
+}
+
+.sold-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(2px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    border-radius: 8px;
+    pointer-events: none;
+}
+
+.sold-overlay span {
+    background: #1a1a1a;
+    color: white;
+    padding: 8px 24px;
+    font-size: 1.2rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+    transform: rotate(-5deg);
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Empty State */
+.profile-empty {
+    text-align: center;
+    padding: 60px 20px;
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #f0f0f0;
+}
+
+.profile-empty p {
+    color: #999;
+    font-size: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+    .profile-container {
+        padding: 16px;
+        padding-top: 90px;
+    }
+
+    .profile-avatar-large {
+        width: 80px;
+        height: 80px;
+        font-size: 2rem;
+        margin-top: -40px;
+    }
+
+    .profile-name {
+        font-size: 1.5rem;
+    }
+
+    .profile-stats {
+        gap: 24px;
+    }
+
+    .stat-value {
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-info {
+        padding: 0 16px 16px 16px;
+    }
+
+    .profile-meta {
+        gap: 16px;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .profile-stats {
+        justify-content: space-around;
+    }
+
+    .tab-button {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+
+    .sold-overlay span {
+        padding: 6px 18px;
+        font-size: 1rem;
+    }
+}

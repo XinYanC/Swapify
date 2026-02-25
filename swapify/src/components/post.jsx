@@ -69,6 +69,7 @@ const Post = ({
     initialLikes = 0, 
     price = 0, 
     transactionType = 'pickup',
+    sellerId = '1', // Add sellerId prop
     sellerName = 'Sarah Chen',
     sellerRating = 4.8
 }) => {
@@ -76,15 +77,20 @@ const Post = ({
     const navigate = useNavigate();
 
     const handleLike = (e) => {
-        e.stopPropagation();
+        e.stopPropagation(); // Prevent triggering post click
         setLiked(!liked);
-        // You can still track likes in your backend when user clicks
-        // But don't show the count on the card
     };
 
     const handleOpenPost = () => {
         if (id) {
             navigate(`/post/${id}`);
+        }
+    };
+
+    const handleSellerClick = (e) => {
+        e.stopPropagation(); // Prevent triggering post click
+        if (sellerId) {
+            navigate(`/profile/${sellerId}`);
         }
     };
 
@@ -141,8 +147,8 @@ const Post = ({
                 <HeartIcon />
             </button>
 
-            {/* Seller Info Section */}
-            <div className="post-seller">
+            {/* Seller Info Section - Clickable to profile */}
+            <div className="post-seller" onClick={handleSellerClick}>
                 <div className="seller-info">
                     <div className="seller-avatar">
                         {getSellerInitials(sellerName)}
