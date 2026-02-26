@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { readListings } from '../api/listings'
-import Post from '../components/Post'
+import Post from '../components/post'
 import CreateListing from '../components/CreateListing'
 import FullLogo from '../assets/FullLogo.PNG'
 import '../styles/createListing.css'
@@ -74,6 +74,7 @@ function Home() {
               location={listing.meetup_location}
               transactionType={listing.transaction_type}
               price={listing.price}
+              owner={listing.owner}
             />
           ))
         ) : (

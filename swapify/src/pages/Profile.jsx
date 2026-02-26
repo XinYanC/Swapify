@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import Post from '../components/Post'; // Your existing Post component
+import { Link, useParams } from 'react-router-dom';
+import Post from '../components/post'; // Your existing Post component
+import { readUsers } from '../api/users';
+import { readListings } from '../api/listings';
+import FullLogo from '../assets/FullLogo.PNG';
 import '../styles/profile.css';
 
 // SVG Icons
@@ -28,103 +31,108 @@ const VerifiedIcon = () => (
 );
 
 const Profile = () => {
-    const { userId } = useParams(); // Get user ID from URL if viewing someone else's profile
+    const { username } = useParams();
     const [user, setUser] = useState(null);
     const [listings, setListings] = useState([]);
     const [activeTab, setActiveTab] = useState('active'); // 'active' or 'sold'
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
+    const [searchQuery, setSearchQuery] = useState('');
 
-    // Mock data - replace with actual API calls
+    const normalizeUsername = (value) =>
+        String(value || '')
+            .trim()
+            .replace(/^@+/, '')
+            .toLowerCase();
+
     useEffect(() => {
-        // Simulate API fetch
         const fetchUserData = async () => {
+            if (!username) {
+                setError('Username is required to view this profile.');
+                setLoading(false);
+                return;
+            }
+
             setLoading(true);
-            
-            // Mock user data
-            const mockUser = {
-                id: userId || 'current-user',
-                name: 'Sarah Chen',
-                username: '@sarah.chen',
-                avatar: null, // No avatar, will use initials
-                location: 'New York, NY',
-                memberSince: '2024',
-                rating: 4.8,
-                totalReviews: 128,
-                verified: true,
-                bio: 'Book lover 📚 | NYU student | Always looking for good reads',
-                stats: {
-                    itemsListed: 24,
-                    itemsSold: 8,
-                    activeListings: 16
-                }
-            };
+            setError('');
 
-            // Mock listings data
-            const mockListings = [
-                {
-                    _id: '1',
-                    title: 'STEWART\'S CALCULUS',
-                    description: 'Early Transcendentals 8th Edition',
-                    images: ['https://via.placeholder.com/300'],
-                    meetup_location: 'Bobst Library',
-                    transaction_type: 'sell',
-                    price: 45,
-                    status: 'active', // 'active' or 'sold'
-                    createdAt: '2024-02-20'
-                },
-                {
-                    _id: '2',
-                    title: 'The Great Gatsby',
-                    description: 'Hardcover edition',
-                    images: ['https://via.placeholder.com/300'],
-                    meetup_location: 'Starbucks on 3rd',
-                    transaction_type: 'pickup',
-                    price: 0,
-                    status: 'active'
-                },
-                {
-                    _id: '3',
-                    title: 'Organic Chemistry Textbook',
-                    description: '7th Edition, like new',
-                    images: ['https://via.placeholder.com/300'],
-                    meetup_location: 'Science Library',
-                    transaction_type: 'sell',
-                    price: 65,
-                    status: 'sold'
-                },
-                {
-                    _id: '4',
-                    title: 'Introduction to Algorithms',
-                    description: 'CLRS, some highlighting',
-                    images: ['https://via.placeholder.com/300'],
-                    meetup_location: 'CS Building',
-                    transaction_type: 'sell',
-                    price: 50,
-                    status: 'active'
-                },
-                {
-                    _id: '5',
-                    title: 'Modern Art History',
-                    description: 'Course textbook',
-                    images: ['https://via.placeholder.com/300'],
-                    meetup_location: 'Art School',
-                    transaction_type: 'donation',
-                    price: 0,
-                    status: 'sold'
-                }
-            ];
+            try {
+                const [usersResponse, listingsResponse] = await Promise.all([
+                    readUsers(),
+                    readListings(),
+                ]);
 
-            setUser(mockUser);
-            setListings(mockListings);
-            setLoading(false);
+                const usersArray = usersResponse && (usersResponse.Users || usersResponse.User)
+                    ? Object.values(usersResponse.Users || usersResponse.User)
+                    : Array.isArray(usersResponse)
+                        ? usersResponse
+                        : [];
+
+                const allListings = listingsResponse && listingsResponse.Listings
+                    ? Object.values(listingsResponse.Listings)
+                    : Array.isArray(listingsResponse)
+                        ? listingsResponse
+                        : [];
+
+                const targetUsername = normalizeUsername(username);
+
+                const profileUser = usersArray.find(
+                    (candidate) => normalizeUsername(candidate.username) === targetUsername
+                );
+
+                if (!profileUser) {
+                    setUser(null);
+                    setListings([]);
+                    setError('User not found');
+                    return;
+                }
+
+                const userListings = allListings.filter(
+                    (listing) => normalizeUsername(listing.owner) === targetUsername
+                );
+                const soldCount = userListings.filter((listing) => listing.status === 'sold').length;
+                const activeCount = userListings.filter((listing) => listing.status !== 'sold').length;
+
+                const isVerified = profileUser.is_verified === true
+                    || profileUser.is_verified === 'true'
+                    || profileUser.verified === true
+                    || profileUser.verified === 'true';
+
+                const normalizedUser = {
+                    ...profileUser,
+                    name: profileUser.name || profileUser.username || username,
+                    username: normalizeUsername(profileUser.username || username),
+                    location: profileUser.location || 'Unknown location',
+                    memberSince: profileUser.memberSince || profileUser.member_since || 'N/A',
+                    rating: Number(profileUser.rating) || 0,
+                    totalReviews: Number(profileUser.totalReviews || profileUser.total_reviews) || 0,
+                    verified: isVerified,
+                    bio: profileUser.bio || 'No bio yet.',
+                    stats: {
+                        itemsListed: userListings.length,
+                        itemsSold: soldCount,
+                        activeListings: activeCount,
+                    },
+                };
+
+                setUser(normalizedUser);
+                setListings(userListings);
+            } catch (err) {
+                console.error('Failed to load profile data:', err);
+                setError('Failed to load profile data.');
+                setUser(null);
+                setListings([]);
+            } finally {
+                setLoading(false);
+            }
         };
 
         fetchUserData();
-    }, [userId]);
+    }, [username]);
 
     // Filter listings based on active tab
     const filteredListings = listings.filter(item => 
-        activeTab === 'active' ? item.status === 'active' : item.status === 'sold'
+        activeTab === 'active' ? item.status !== 'sold' : item.status === 'sold'
     );
 
     // Get user initials for avatar
@@ -135,22 +143,97 @@ const Profile = () => {
 
     if (loading) {
         return (
-            <div className="profile-loading">
-                <div className="loading-spinner"></div>
-            </div>
+            <>
+                <nav className="main-nav">
+                    <div className="main-nav-left">
+                        <Link to="/">
+                            <img src={FullLogo} alt="Swapify" />
+                        </Link>
+                    </div>
+                    <div className="search-container">
+                        <input
+                            type="text"
+                            className="search-bar"
+                            placeholder="Search listings..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                    </div>
+                    <div className="main-nav-right">
+                        <h2>Saved Items</h2>
+                        <h2>Messages</h2>
+                        <h2>
+                            <Link to={username ? `/profile/${encodeURIComponent(normalizeUsername(username))}` : '/login'}>Profile</Link>
+                        </h2>
+                    </div>
+                </nav>
+                <div className="profile-loading">
+                    <div className="loading-spinner"></div>
+                </div>
+            </>
         );
     }
 
     if (!user) {
         return (
-            <div className="profile-error">
-                <h2>User not found</h2>
-                <p>The profile you're looking for doesn't exist.</p>
-            </div>
+            <>
+                <nav className="main-nav">
+                    <div className="main-nav-left">
+                        <Link to="/">
+                            <img src={FullLogo} alt="Swapify" />
+                        </Link>
+                    </div>
+                    <div className="search-container">
+                        <input
+                            type="text"
+                            className="search-bar"
+                            placeholder="Search listings..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                    </div>
+                    <div className="main-nav-right">
+                        <h2>Saved Items</h2>
+                        <h2>Messages</h2>
+                        <h2>
+                            <Link to={username ? `/profile/${encodeURIComponent(normalizeUsername(username))}` : '/login'}>Profile</Link>
+                        </h2>
+                    </div>
+                </nav>
+                <div className="profile-error">
+                    <h2>{error || 'User not found'}</h2>
+                    <p>The profile you're looking for doesn't exist or could not be loaded.</p>
+                </div>
+            </>
         );
     }
 
     return (
+        <>
+            <nav className="main-nav">
+                <div className="main-nav-left">
+                    <Link to="/">
+                        <img src={FullLogo} alt="Swapify" />
+                    </Link>
+                </div>
+                <div className="search-container">
+                    <input
+                        type="text"
+                        className="search-bar"
+                        placeholder="Search listings..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                </div>
+                <div className="main-nav-right">
+                    <h2>Saved Items</h2>
+                    <h2>Messages</h2>
+                    <h2>
+                        <Link to={`/profile/${encodeURIComponent(user.username)}`}>Profile</Link>
+                    </h2>
+                </div>
+            </nav>
+
         <div className="profile-container">
             {/* Profile Header */}
             <div className="profile-header">
@@ -169,7 +252,7 @@ const Profile = () => {
                                 {user.name}
                                 {user.verified && <VerifiedIcon />}
                             </h1>
-                            <p className="profile-username">{user.username}</p>
+                            <p className="profile-username">@{user.username}</p>
                         </div>
                         
                         <p className="profile-bio">{user.bio}</p>
@@ -246,7 +329,7 @@ const Profile = () => {
                                 location={listing.meetup_location}
                                 transactionType={listing.transaction_type}
                                 price={listing.price}
-                                sellerName={user.name}
+                                owner={listing.owner}
                                 sellerRating={user.rating}
                             />
                         </div>
@@ -258,6 +341,7 @@ const Profile = () => {
                 </div>
             )}
         </div>
+        </>
     );
 };
 

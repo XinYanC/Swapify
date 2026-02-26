@@ -69,8 +69,7 @@ const Post = ({
     initialLikes = 0, 
     price = 0, 
     transactionType = 'pickup',
-    sellerId = '1', // Add sellerId prop
-    sellerName = 'Sarah Chen',
+    owner,
     sellerRating = 4.8
 }) => {
     const [liked, setLiked] = useState(false);
@@ -84,6 +83,7 @@ const Post = ({
             maximumFractionDigits: 2,
         })}`
         : null;
+    const displayOwner = owner || 'Unknown User';
 
     const handleLike = (e) => {
         e.stopPropagation(); // Prevent triggering post click
@@ -98,8 +98,8 @@ const Post = ({
 
     const handleSellerClick = (e) => {
         e.stopPropagation(); // Prevent triggering post click
-        if (sellerId) {
-            navigate(`/profile/${sellerId}`);
+        if (owner) {
+            navigate(`/profile/${encodeURIComponent(owner)}`);
         }
     };
 
@@ -161,10 +161,10 @@ const Post = ({
             <div className="post-seller" onClick={handleSellerClick}>
                 <div className="seller-info">
                     <div className="seller-avatar">
-                        {getSellerInitials(sellerName)}
+                        {getSellerInitials(displayOwner)}
                     </div>
                     <div className="seller-details">
-                        <span className="seller-name">{sellerName}</span>
+                        <span className="seller-name">{displayOwner}</span>
                         <span className="seller-rating">
                             <span className="star-icon">★</span>
                             {sellerRating}

@@ -4,6 +4,7 @@
     margin: 0 auto;
     padding: 20px;
     padding-top: 100px; /* Account for fixed navbar */
+    padding-bottom: 72px;
 }
 
 /* Loading State */
@@ -311,6 +312,7 @@
     .profile-container {
         padding: 16px;
         padding-top: 90px;
+        padding-bottom: 56px;
     }
 
     .profile-avatar-large {
